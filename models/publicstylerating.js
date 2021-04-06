@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      publicstyleRating.belongsTo(modesl.user);
+      publicstyleRating.belongsTo(models.user);
       publicstyleRating.belongsTo(models.publicstyle);
     }
   }
