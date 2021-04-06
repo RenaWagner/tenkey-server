@@ -4,6 +4,7 @@ const corsMiddleWare = require("cors");
 const { PORT } = require("./config/constants");
 const authRouter = require("./routers/auth");
 const publicstyleRouter = require("./routers/publicstyle");
+const styleRouter = require("./routers/style");
 const authMiddleware = require("./auth/middleware");
 
 const app = express();
@@ -21,7 +22,8 @@ if (process.env.DELAY) {
 }
 // Routes
 app.use("/", authRouter);
-app.use("/publicstyle", publicstyleRouter);
+app.use("/public", publicstyleRouter);
+app.use("/user", authMiddleware, styleRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
