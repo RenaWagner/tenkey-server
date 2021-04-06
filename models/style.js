@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
   style.init(
     {
       comment: {
-        allowNull: false,
         type: DataTypes.STRING,
       },
       wearingDate: {
