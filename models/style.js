@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       style.belongsTo(models.user);
     }
-    }
   }
   style.init(
     {
