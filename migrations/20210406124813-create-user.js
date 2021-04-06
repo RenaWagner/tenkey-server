@@ -27,6 +27,7 @@ module.exports = {
       },
       sensitiveness: {
         defaultValue: "none",
+        allowNull: false,
         type: Sequelize.STRING,
       },
       clothingType: {

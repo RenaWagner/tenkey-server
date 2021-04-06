@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       sensitiveness: {
         defaultValue: "none",
+        allowNull: false,
         type: DataTypes.STRING,
       },
       clothingType: {
