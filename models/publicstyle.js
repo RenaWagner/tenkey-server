@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      publicstyle.belongsToMany(models.user, {
+        through: "publicstyleRatings",
+        foreignKey: "publicstyleId",
+      });
     }
   }
   publicstyle.init(
