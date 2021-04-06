@@ -15,7 +15,7 @@ router.get("/:temp/", async (req, res, next) => {
       where: { minTemp: minTemp, maxTemp: maxTemp },
     });
     if (!publicstyles) {
-      return res.status(400).send("No styles found");
+      return res.status(400).send({ message: "No styles found" });
     }
     res.send(publicstyles);
   } catch (e) {

@@ -2,6 +2,7 @@ const { Router } = require("express");
 const router = new Router();
 const PublicStyle = require("../models").publicstyle;
 const Style = require("../models").style;
+const User = require("../models").user;
 
 router.get("/public/:temp", async (req, res, next) => {
   try {
@@ -27,7 +28,7 @@ router.get("/public/:temp", async (req, res, next) => {
       where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
     });
     if (!publicstyles) {
-      return res.status(400).send("No public styles found");
+      return res.status(400).send({ message: "No public styles found" });
     }
     res.send(publicstyles);
   } catch (e) {
@@ -45,9 +46,39 @@ router.get("/original/:temp", async (req, res, next) => {
       where: { minTemp: minTemp, maxTemp: maxTemp },
     });
     if (!originalStyles) {
-      return res.status(400).send("No original styles found");
+      return res.status(400).send({ message: "No original styles found" });
     }
     res.send(originalStyles);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/original", async (req, res, next) => {
+  try {
+    const { date, temp, comment, rating, imageUrl } = req.body;
+    if (!date || !temp || !imageUrl) {
+      return res.status(400).send({ message: "Please provide required info." });
+    }
+
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      return res.status(400).send({ message: "User not found" });
+    }
+    const minTemp = temp <= 0 ? 0 : Math.floor(temp / 5) * 5;
+    const maxTemp = temp <= 0 ? 0 : (temp % 5) + temp;
+
+    const addNewStyle = await Style.create({
+      date: date,
+      comment: comment,
+      wearingDate: date,
+      imageUrl: imageUrl,
+      rating: rating,
+      minTemp: minTemp,
+      maxTemp: maxTemp,
+      userId: req.user.id,
+    });
+    res.send(addNewStyle);
   } catch (e) {
     next(e);
   }
