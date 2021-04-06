@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       user.hasMany(models.style);
+      user.belongsToMany(models.publicstyleRating, {
+        through: "publicstyleRatings",
+        foreignKey: "userId",
+      });
     }
   }
   user.init(
