@@ -1,4 +1,4 @@
 node_modules/
-config/config.json
-config/constants.json
-config/secrets.js
+config.json
+constants.js
+secrets.js
