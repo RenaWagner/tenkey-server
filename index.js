@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
-const loggerMiddleWare = require("morgan");
 const cors = require("cors");
 app.use(cors());
+const loggerMiddleWare = require("morgan");
+
 const { PORT } = require("./config/constants");
 const authRouter = require("./routers/auth");
 const publicstyleRouter = require("./routers/publicstyle");
