@@ -9,11 +9,12 @@ function calculateMinTemp(temp) {
   let minTemp = 0;
   if (temperature <= 0) {
     minTemp = 0;
-  } else if (temperature >= 25) {
-    minTemp = 25;
+  } else if (temperature >= 26) {
+    minTemp = 26;
   } else {
-    minTemp = Math.floor(temp / 5) * 5;
+    minTemp = Math.floor(temperature / 5) * 5 + 1;
   }
+  return minTemp;
 }
 
 function calculateMaxTemp(temp) {
@@ -21,33 +22,49 @@ function calculateMaxTemp(temp) {
   let maxTemp = 0;
   if (temperature <= 0) {
     maxTemp = 0;
-  } else if (temperature >= 25) {
+  } else if (temperature >= 26) {
     maxTemp = 50;
   } else {
+    maxTemp = Math.floor(temperature / 5) * 5 + 5;
   }
+  return maxTemp;
 }
 
 router.get("/public/:temp", async (req, res, next) => {
   try {
-    const temp = parseInt(req.params.temp);
-    console.log(req.user);
+    const temp = req.params.temp;
     const sensitiveness = req.user.sensitiveness;
     const type = req.user.clothingType;
-    let minTemp = 0;
-    let maxTemp = 0;
+
+    let maxTemp = calculateMaxTemp(temp);
+    let minTemp = calculateMinTemp(temp);
 
     if (sensitiveness === "heat") {
-      minTemp = temp <= 0 ? 0 : Math.floor(temp / 5) * 5 - 5;
-      maxTemp = temp <= 0 ? 0 : (temp % 5) + temp - 5;
+      if (maxTemp === 50) {
+        minTemp = 26;
+        maxTemp = 50;
+      } else if (minTemp === 0) {
+        minTemp = 1;
+        maxTemp = 5;
+      } else {
+        minTemp = minTemp + 5;
+        maxTemp = maxTemp + 5;
+      }
     } else if (sensitiveness === "cold") {
-      minTemp = temp <= 0 ? 0 : Math.floor(temp / 5) * 5 + 5;
-      maxTemp = temp <= 0 ? 0 : (temp % 5) + temp + 5;
-    } else {
-      minTemp = temp <= 0 ? 0 : Math.floor(temp / 5) * 5;
-      maxTemp = temp <= 0 ? 0 : (temp % 5) + temp;
+      if (maxTemp === 50) {
+        minTemp = 21;
+        maxTemp = 25;
+      } else {
+        minTemp = minTemp - 5;
+        maxTemp = maxTemp - 5;
+      }
+      if (maxTemp <= 0) {
+        minTemp = 0;
+        maxTemp = 0;
+      }
     }
 
-    const publicstyles = await PublicStyle.findAll({
+    const publicstylesWithRating = await PublicStyle.findAll({
       where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
       include: [
         {
@@ -61,6 +78,14 @@ router.get("/public/:temp", async (req, res, next) => {
       ],
     });
 
+    const publicstylesWithoutRating = await PublicStyle.findAll({
+      where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
+    });
+
+    const publicstyles = !publicstylesWithRating.length
+      ? publicstylesWithoutRating
+      : publicstylesWithRating;
+
     if (!publicstyles) {
       return res.status(400).send({ message: "No public styles found" });
     }
@@ -72,9 +97,9 @@ router.get("/public/:temp", async (req, res, next) => {
 
 router.get("/original/:temp", async (req, res, next) => {
   try {
-    const temp = parseInt(req.params.temp);
-    const minTemp = temp <= 0 ? 0 : Math.floor(temp / 5) * 5;
-    const maxTemp = temp <= 0 ? 0 : (temp % 5) + temp;
+    const temp = req.params.temp;
+    const maxTemp = calculateMaxTemp(temp);
+    const minTemp = calculateMinTemp(temp);
 
     const originalStyles = await Style.findAll({
       where: { minTemp: minTemp, maxTemp: maxTemp },
@@ -99,9 +124,8 @@ router.post("/original", async (req, res, next) => {
     if (!user) {
       return res.status(400).send({ message: "User not found" });
     }
-    const temperature = parseInt(temp);
-    const minTemp = temperature <= 0 ? 0 : Math.floor(temperature / 5) * 5;
-    const maxTemp = temperature <= 0 ? 0 : (temperature % 5) + temperature;
+    const maxTemp = calculateMaxTemp(temp);
+    const minTemp = calculateMinTemp(temp);
 
     const addNewStyle = await Style.create({
       comment: comment,
@@ -120,7 +144,7 @@ router.post("/original", async (req, res, next) => {
 
 router.patch("/original/:styleId", async (req, res, next) => {
   try {
-    const { date, temp, comment, rating } = req.body;
+    const { comment, rating } = req.body;
     const styleId = parseInt(req.params.styleId);
 
     const styleToUpdate = await Style.findByPk(styleId);
@@ -128,19 +152,26 @@ router.patch("/original/:styleId", async (req, res, next) => {
       return res.status(404).send({ message: "Style not found" });
     }
 
-    const temperature = parseInt(temp);
-    const minTemp = temperature <= 0 ? 0 : Math.floor(temperature / 5) * 5;
-    const maxTemp = temperature <= 0 ? 0 : (temperature % 5) + temperature;
-
     await styleToUpdate.update({
-      date: date,
       comment: comment,
-      wearingDate: date,
       rating: rating,
-      minTemp: minTemp,
-      maxTemp: maxTemp,
     });
     return res.status(200).send({ styleToUpdate });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.delete("/original/:styleId", async (req, res, next) => {
+  try {
+    const styleId = parseInt(req.params.styleId);
+
+    const styleToDelete = await Style.findByPk(styleId);
+    if (!styleToDelete) {
+      return res.status(404).send({ message: "Style not found" });
+    }
+    const deleted = await styleToDelete.destroy();
+    res.send(deleted);
   } catch (e) {
     next(e);
   }
