@@ -1,19 +1,18 @@
 const express = require("express");
+const app = express();
 const loggerMiddleWare = require("morgan");
-const corsMiddleWare = require("cors");
+const cors = require("cors");
+app.use(cors());
 const { PORT } = require("./config/constants");
 const authRouter = require("./routers/auth");
 const publicstyleRouter = require("./routers/publicstyle");
 const userRouter = require("./routers/user");
 const authMiddleware = require("./auth/middleware");
 
-const app = express();
-
 app.use(loggerMiddleWare("dev"));
 
 const bodyParserMiddleWare = express.json();
 app.use(bodyParserMiddleWare);
-app.use(corsMiddleWare());
 
 if (process.env.DELAY) {
   app.use((req, res, next) => {
