@@ -17,3 +17,11 @@ async function usersWithPublicstyleRatings() {
 }
 
 // usersWithPublicstyleRatings().then((user) => console.log(user));
+
+async function test() {
+  const publicstyles = await publicstyle.findAll({
+    where: { minTemp: 6, maxTemp: 10, clothingType: "female" },
+  });
+  return publicstyles.map((style) => style.get({ plain: true }));
+}
+test().then((user) => console.log(user));
