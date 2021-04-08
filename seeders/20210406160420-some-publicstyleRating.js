@@ -13,6 +13,13 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          rating: 3,
+          userId: 1,
+          publicstyleId: 27,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
           rating: 4,
           userId: 1,
           publicstyleId: 28,

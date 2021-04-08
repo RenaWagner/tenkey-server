@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = new Router();
 const PublicStyle = require("../models").publicstyle;
+const PublicStyleRating = require("../models").publicstyleRating;
 const Style = require("../models").style;
 const User = require("../models").user;
 
@@ -70,26 +71,36 @@ router.get("/public/:temp", async (req, res, next) => {
         {
           model: User,
           where: { id: req.user.id },
-          // attributes: ["id"],
-          // through: {
-          //   attributes: ["rating"],
-          // },
+          attributes: ["id"],
+          through: {
+            attributes: ["rating"],
+          },
         },
       ],
     });
 
-    // const publicstylesWithoutRating = await PublicStyle.findAll({
-    //   where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
-    // });
+    const publicstyles = await PublicStyle.findAll({
+      where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
+    });
 
-    // const publicstyles = !publicstylesWithRating.length
-    //   ? publicstylesWithoutRating
-    //   : publicstylesWithRating;
+    const publicstylesId = publicstylesWithRating.map((item) => {
+      console.log("item", item.id);
+      return item.id;
+    });
 
-    if (!publicstylesWithRating) {
+    const publicstylesWithoutRating = publicstyles.filter((style) => {
+      return !publicstylesId.includes(style.id);
+    });
+
+    const styleWithRating = [
+      ...publicstylesWithoutRating,
+      ...publicstylesWithRating,
+    ];
+
+    if (!styleWithRating) {
       return res.status(400).send({ message: "No public styles found" });
     }
-    res.send(publicstylesWithRating);
+    res.send(styleWithRating);
   } catch (e) {
     next(e);
   }
