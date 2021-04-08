@@ -6,6 +6,18 @@ module.exports = {
       "styles",
       [
         {
+          comment: "It was a bit too cold",
+          wearingDate: "2021-01-31",
+          imageUrl:
+            "https://i.pinimg.com/564x/8f/14/6a/8f146abd4ef43b547f5201396eaec476.jpg",
+          rating: 3,
+          minTemp: 0,
+          maxTemp: 0,
+          userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
           comment:
             "I wore this with a winter jacket. It was too hot for a bike ride.",
           wearingDate: "2021-01-31",
@@ -14,6 +26,66 @@ module.exports = {
           rating: 3,
           minTemp: 1,
           maxTemp: 5,
+          userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          comment: "It was perfect on the bike",
+          wearingDate: "2021-01-31",
+          imageUrl:
+            "https://i.pinimg.com/564x/25/cc/f4/25ccf4c7e905e64a2c4f631333f05737.jpg",
+          rating: 3,
+          minTemp: 6,
+          maxTemp: 10,
+          userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          comment: "I wore this with a camel coat.",
+          wearingDate: "2021-01-31",
+          imageUrl:
+            "https://i.pinimg.com/564x/14/22/9c/14229c9fb37f2945f69f4b8b03375805.jpg",
+          rating: 3,
+          minTemp: 11,
+          maxTemp: 15,
+          userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          comment: "Perfect match!",
+          wearingDate: "2021-01-31",
+          imageUrl:
+            "https://i.pinimg.com/564x/9a/95/a3/9a95a3fff0f1b014592af5e9d5f4b73b.jpg",
+          rating: 3,
+          minTemp: 16,
+          maxTemp: 20,
+          userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          comment: "A bit too hot with long pants.",
+          wearingDate: "2021-01-31",
+          imageUrl:
+            "https://i.pinimg.com/564x/86/52/2c/86522cca4aa033cf049f2a08798b52b3.jpg",
+          rating: 3,
+          minTemp: 21,
+          maxTemp: 25,
+          userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          comment: "Perfect!",
+          wearingDate: "2021-01-31",
+          imageUrl:
+            "https://i.pinimg.com/564x/7e/08/b8/7e08b82262b4187929cd3d596285771f.jpg",
+          rating: 3,
+          minTemp: 26,
+          maxTemp: 50,
           userId: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
