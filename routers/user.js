@@ -70,26 +70,26 @@ router.get("/public/:temp", async (req, res, next) => {
         {
           model: User,
           where: { id: req.user.id },
-          attributes: ["id"],
-          through: {
-            attributes: ["rating"],
-          },
+          // attributes: ["id"],
+          // through: {
+          //   attributes: ["rating"],
+          // },
         },
       ],
     });
 
-    const publicstylesWithoutRating = await PublicStyle.findAll({
-      where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
-    });
+    // const publicstylesWithoutRating = await PublicStyle.findAll({
+    //   where: { minTemp: minTemp, maxTemp: maxTemp, clothingType: type },
+    // });
 
-    const publicstyles = !publicstylesWithRating.length
-      ? publicstylesWithoutRating
-      : publicstylesWithRating;
+    // const publicstyles = !publicstylesWithRating.length
+    //   ? publicstylesWithoutRating
+    //   : publicstylesWithRating;
 
-    if (!publicstyles) {
+    if (!publicstylesWithRating) {
       return res.status(400).send({ message: "No public styles found" });
     }
-    res.send(publicstyles);
+    res.send(publicstylesWithRating);
   } catch (e) {
     next(e);
   }

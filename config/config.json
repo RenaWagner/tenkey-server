@@ -1,6 +1,6 @@
 {
   "development": {
-    "url": "postgres://rpnfdhsv:lz4nHUAK_pkamPHq_kN6fpEGlOJJZwCr@hattie.db.elephantsql.com:5432/rpnfdhsv",
+    "url": "postgres://crvednpp:1K3P55bbhUyeMwHTIZT_-R3_G-bVZNGH@queenie.db.elephantsql.com:5432/crvednpp",
     "dialect": "postgres"
   },
   "test": {
