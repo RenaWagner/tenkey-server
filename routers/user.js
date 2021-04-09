@@ -253,4 +253,24 @@ router.patch("/public/:publicstyleId", async (req, res, next) => {
   }
 });
 
+router.patch("/profile", async (req, res, next) => {
+  try {
+    const { clothingType, sensitiveness } = req.body;
+    const userId = req.user.id;
+
+    const userToUpdate = await User.findByPk(userId);
+    if (!userToUpdate) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    await userToUpdate.update({
+      clothingType: clothingType,
+      sensitiveness: sensitiveness,
+    });
+    return res.status(200).send({ userToUpdate });
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
