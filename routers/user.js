@@ -177,4 +177,29 @@ router.delete("/original/:styleId", async (req, res, next) => {
   }
 });
 
+router.patch("/public/:styleId", async (req, res, next) => {
+  try {
+    const { rating } = req.body;
+    const styleId = parseInt(req.params.styleId);
+
+    const styleToUpdate = await PublicStyle.findByPk(styleId);
+    if (!styleToUpdate) {
+      return res.status(404).send({ message: "Style not found" });
+    }
+
+    if (!styleToUpdate.hasOwnProperty("users")) {
+      console.log("no users");
+    } else {
+      console.log("yes users");
+    }
+    // await styleToUpdate.update({
+    //   comment: comment,
+    //   rating: rating,
+    // });
+    return res.status(200).send({ styleToUpdate });
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
