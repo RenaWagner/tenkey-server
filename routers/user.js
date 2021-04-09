@@ -188,26 +188,66 @@ router.delete("/original/:styleId", async (req, res, next) => {
   }
 });
 
-router.patch("/public/:styleId", async (req, res, next) => {
+router.patch("/public/:publicstyleId", async (req, res, next) => {
   try {
     const { rating } = req.body;
-    const styleId = parseInt(req.params.styleId);
+    const publicstyleId = parseInt(req.params.publicstyleId);
+    if (!rating) {
+      return res
+        .status(404)
+        .send({ message: "Please choose the rating to update" });
+    }
 
-    const styleToUpdate = await PublicStyle.findByPk(styleId);
-    if (!styleToUpdate) {
+    const publicstyleToUpdate = await PublicStyle.findByPk(publicstyleId);
+
+    if (!publicstyleToUpdate) {
       return res.status(404).send({ message: "Style not found" });
     }
 
-    if (!styleToUpdate.hasOwnProperty("users")) {
-      console.log("no users");
+    const publicstyleToUpdateWithRating = await PublicStyle.findByPk(
+      publicstyleId,
+      {
+        include: [
+          {
+            model: User,
+            where: { id: req.user.id },
+            attributes: ["id"],
+            through: {
+              attributes: ["rating"],
+            },
+          },
+        ],
+      }
+    );
+
+    if (!publicstyleToUpdateWithRating) {
+      const addNewRating = await PublicStyleRating.create({
+        userId: req.user.id,
+        publicstyleId: publicstyleId,
+        rating: parseInt(rating),
+      });
     } else {
-      console.log("yes users");
+      const publicstyleRatingToUpdate = await PublicStyleRating.findOne({
+        where: { publicstyleId: publicstyleId, userId: req.user.id },
+      });
+      await publicstyleRatingToUpdate.update({
+        rating: parseInt(rating),
+      });
     }
-    // await styleToUpdate.update({
-    //   comment: comment,
-    //   rating: rating,
-    // });
-    return res.status(200).send({ styleToUpdate });
+
+    const publicstyleUpdated = await PublicStyle.findByPk(publicstyleId, {
+      include: [
+        {
+          model: User,
+          where: { id: req.user.id },
+          attributes: ["id"],
+          through: {
+            attributes: ["rating"],
+          },
+        },
+      ],
+    });
+    return res.status(200).send({ publicstyleUpdated });
   } catch (e) {
     next(e);
   }
