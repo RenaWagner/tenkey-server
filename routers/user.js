@@ -267,7 +267,9 @@ router.patch("/profile", async (req, res, next) => {
       clothingType: clothingType,
       sensitiveness: sensitiveness,
     });
-    return res.status(200).send({ userToUpdate });
+    delete userToUpdate.dataValues["password"];
+    return res.status(200).send({ ...userToUpdate.dataValues });
+    // return res.status(200).send({ userToUpdate });
   } catch (e) {
     next(e);
   }
