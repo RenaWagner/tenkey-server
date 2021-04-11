@@ -113,7 +113,7 @@ router.get("/original/:temp", async (req, res, next) => {
     const minTemp = calculateMinTemp(temp);
 
     const originalStyles = await Style.findAll({
-      where: { minTemp: minTemp, maxTemp: maxTemp },
+      where: { minTemp: minTemp, maxTemp: maxTemp, id: req.user.id },
     });
     if (!originalStyles) {
       return res.status(400).send({ message: "No original styles found" });
