@@ -124,6 +124,20 @@ router.get("/original/:temp", async (req, res, next) => {
   }
 });
 
+router.get("/original", async (req, res, next) => {
+  try {
+    const originalStyles = await Style.findAll({
+      where: { userId: req.user.id },
+    });
+    if (!originalStyles) {
+      return res.status(400).send({ message: "No styles found" });
+    }
+    res.send(originalStyles);
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.post("/original", async (req, res, next) => {
   try {
     const { date, temp, comment, rating, imageUrl } = req.body;
