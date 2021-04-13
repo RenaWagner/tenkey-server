@@ -23,7 +23,7 @@ if (process.env.DELAY) {
 // Routes
 app.use("/", authRouter);
 app.use("/public", publicstyleRouter);
-app.use("/user", userRouter);
+app.use("/user", authMiddleware, userRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
